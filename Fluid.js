@@ -5,9 +5,9 @@ class Particle {
 		this.vx = 0;
 		this.vy = 0;
 		this.r = null
-		this.color = `rgb(${Math.random() * 255}, 128, ${Math.random() * 255})`;
+		// this.color = `rgb(${Math.random() * 255}, 128, ${Math.random() * 255})`;
 		// this.color = `rgb(${Math.random() * 200}, ${Math.random() * 200}, 255)`;
-		// this.color = `rgb(255, ${Math.random() * 255}, 0)`;
+		this.color = `rgb(255, ${Math.random() * 128}, 0)`;
 		// this.color = "blue";
 	}
 	integrate() {
@@ -171,11 +171,11 @@ class Particle {
 		this.vy += vy;
 	}
 	draw(c) {
-		let w = this.r * 2;
-		// c.fillRect(this.x - w / 2, this.y - w / 2, w, w);
-		c.beginPath();
-		c.arc(this.x, this.y, w / 2, 0, 2 * Math.PI);
-		c.fill();
+		let w = this.r * 3;
+		c.fillRect(this.x - w / 2, this.y - w / 2, w, w);
+		// c.beginPath();
+		// c.arc(this.x, this.y, w / 2, 0, 2 * Math.PI);
+		// c.fill();
 	}
 	static fluidSim(particles, MIN_BOUND_X, MIN_BOUND_Y, MAX_BOUND_X, MAX_BOUND_Y, polys = [], RADIUS = 3, e = 0, VISCOSITY = 0) {
 		const BOUND_X = MAX_BOUND_X - MIN_BOUND_X;
