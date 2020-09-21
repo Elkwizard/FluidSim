@@ -7,7 +7,8 @@ class Particle {
 		this.r = null
 		// this.color = `rgb(${Math.random() * 255}, 128, ${Math.random() * 255})`;
 		// this.color = `rgb(${Math.random() * 200}, ${Math.random() * 200}, 255)`;
-		this.color = `rgb(255, ${Math.random() * 128}, 0)`;
+		// this.color = `rgb(255, ${Math.random() * 128}, 0)`;
+		this.color = `rgb(0, 128, ${Math.random() * 128})`;
 		// this.color = "blue";
 	}
 	integrate() {
@@ -50,30 +51,6 @@ class Particle {
 		return solves;
 	}
 	wallResolve(MIN_BOUND_X, MIN_BOUND_Y, MAX_BOUND_X, MAX_BOUND_Y, polys, e, VISCOSITY) {
-		const BOUND_X = MAX_BOUND_X - MIN_BOUND_X;
-		const BOUND_Y = MAX_BOUND_Y - MIN_BOUND_Y;
-		if (this.x < MIN_BOUND_X + this.r) {
-			this.vx *= -e;
-			this.vy *= (1 - VISCOSITY);
-			this.x = MIN_BOUND_X + this.r;
-		}
-		if (this.y < MIN_BOUND_Y + this.r) {
-			this.vy *= -e;
-			this.vx *= (1 - VISCOSITY);
-			this.y = MIN_BOUND_Y + this.r;
-		}
-		if (this.x > MAX_BOUND_X - this.r) {
-			this.vx *= -e;
-			this.vy *= (1 - VISCOSITY);
-			this.x = MAX_BOUND_X - this.r;
-		}
-		if (this.y > MAX_BOUND_Y - this.r) {
-			this.vy *= -e;
-			this.vx *= (1 - VISCOSITY);
-			this.y = MAX_BOUND_Y - this.r;
-		}
-
-
 		for (let i = 0; i < polys.length; i++) {
 			let b = polys[i].vertices;
 			let box = polys[i].boundingBox;
@@ -158,8 +135,28 @@ class Particle {
 				let j = -(1 + e) * (this.vx * axis.x + this.vy * axis.y);
 				this.vx += axis.x * j;
 				this.vy += axis.y * j;
-				
 			}
+			
+		}
+		if (this.x < MIN_BOUND_X + this.r) {
+			this.vx *= -e;
+			this.vy *= (1 - VISCOSITY);
+			this.x = MIN_BOUND_X + this.r;
+		}
+		if (this.y < MIN_BOUND_Y + this.r) {
+			this.vy *= -e;
+			this.vx *= (1 - VISCOSITY);
+			this.y = MIN_BOUND_Y + this.r;
+		}
+		if (this.x > MAX_BOUND_X - this.r) {
+			this.vx *= -e;
+			this.vy *= (1 - VISCOSITY);
+			this.x = MAX_BOUND_X - this.r;
+		}
+		if (this.y > MAX_BOUND_Y - this.r) {
+			this.vy *= -e;
+			this.vx *= (1 - VISCOSITY);
+			this.y = MAX_BOUND_Y - this.r;
 		}
 	}
 	move(dx, dy) {
