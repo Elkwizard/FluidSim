@@ -51,6 +51,28 @@ class Particle {
 		return solves;
 	}
 	wallResolve(MIN_BOUND_X, MIN_BOUND_Y, MAX_BOUND_X, MAX_BOUND_Y, polys, e, VISCOSITY) {
+
+		if (this.x < MIN_BOUND_X + this.r) {
+			this.vx *= -e;
+			this.vy *= (1 - VISCOSITY);
+			this.x = MIN_BOUND_X + this.r;
+		}
+		if (this.y < MIN_BOUND_Y + this.r) {
+			this.vy *= -e;
+			this.vx *= (1 - VISCOSITY);
+			this.y = MIN_BOUND_Y + this.r;
+		}
+		if (this.x > MAX_BOUND_X - this.r) {
+			this.vx *= -e;
+			this.vy *= (1 - VISCOSITY);
+			this.x = MAX_BOUND_X - this.r;
+		}
+		if (this.y > MAX_BOUND_Y - this.r) {
+			this.vy *= -e;
+			this.vx *= (1 - VISCOSITY);
+			this.y = MAX_BOUND_Y - this.r;
+		}
+
 		for (let i = 0; i < polys.length; i++) {
 			let b = polys[i].vertices;
 			let box = polys[i].boundingBox;
