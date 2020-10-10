@@ -7,9 +7,10 @@ class Particle {
 		this.r = null
 		// this.color = `rgb(${Math.random() * 255}, 128, ${Math.random() * 255})`;
 		// this.color = `rgb(${Math.random() * 200}, ${Math.random() * 200}, 255)`;
-		// this.color = `rgb(255, ${Math.random() * 128}, 0)`;
-		this.color = `rgb(0, 128, ${Math.random() * 128})`;
+		this.color = `rgb(255, ${Math.random() * 128}, 0)`;
+		// this.color = `rgb(0, 128, ${Math.random() * 128})`;
 		// this.color = "blue";
+		// this.color = `rgb(${Math.random() * 70 + 128}, ${Math.random() * 70 + 128}, ${Math.random() * 70 + 128})`;
 	}
 	integrate() {
 		this.x += this.vx;
@@ -28,7 +29,7 @@ class Particle {
 				let mag = dx ** 2 + dy ** 2;
 				if (mag < (this.r + p.r) ** 2 && mag) {
 					mag = Math.sqrt(mag);
-					let over = (this.r + p.r - mag) / 2;
+					let over = (this.r + p.r - mag) / 2 + 0;
 					dx /= mag;
 					dy /= mag;
 					let mx = dx * over;
@@ -158,7 +159,7 @@ class Particle {
 				this.vx += axis.x * j;
 				this.vy += axis.y * j;
 			}
-			
+
 		}
 		if (this.x < MIN_BOUND_X + this.r) {
 			this.vx *= -e;
@@ -196,27 +197,30 @@ class Particle {
 		// c.arc(this.x, this.y, w / 2, 0, 2 * Math.PI);
 		// c.fill();
 	}
-	static fluidSim(particles, MIN_BOUND_X, MIN_BOUND_Y, MAX_BOUND_X, MAX_BOUND_Y, polys = [], RADIUS = 3, e = 0, VISCOSITY = 0) {
+	static fluidSim(particles, MIN_BOUND_X, MIN_BOUND_Y, MAX_BOUND_X, MAX_BOUND_Y, polysRaw = [], RADIUS = 3, e = 0, VISCOSITY = 0) {
 		const BOUND_X = MAX_BOUND_X - MIN_BOUND_X;
 		const BOUND_Y = MAX_BOUND_Y - MIN_BOUND_Y;
-		polys = polys.map(vert => {
-			let minX = Infinity;
-			let minY = Infinity;
-			let maxX = -Infinity;
-			let maxY = -Infinity;
-			for (let i = 0; i < vert.length; i++) {
-				let v = vert[i];
-				if (v.x < minX) minX = v.x;
-				if (v.x > maxX) maxX = v.x;
-				if (v.y < minY) minY = v.y;
-				if (v.y > maxY) maxY = v.y;
-			}
-			return {
-				vertices: vert,
-				boundingBox: { x: minX, y: minY, width: maxX - minX, height: maxY - minY }
-			};
-		})
-
+		let polys;
+		function processPolygons(p) {
+			polys = p.map(vert => {
+				let minX = Infinity;
+				let minY = Infinity;
+				let maxX = -Infinity;
+				let maxY = -Infinity;
+				for (let i = 0; i < vert.length; i++) {
+					let v = vert[i];
+					if (v.x < minX) minX = v.x;
+					if (v.x > maxX) maxX = v.x;
+					if (v.y < minY) minY = v.y;
+					if (v.y > maxY) maxY = v.y;
+				}
+				return {
+					vertices: vert,
+					boundingBox: { x: minX, y: minY, width: maxX - minX, height: maxY - minY }
+				};
+			});
+		}
+		processPolygons(polysRaw);
 		const MAX_RADIUS = RADIUS + 0.5 * RADIUS;
 		const CELL_SIZE = MAX_RADIUS * 2;
 		const GRID_WIDTH = Math.ceil(BOUND_X / CELL_SIZE);
@@ -282,6 +286,6 @@ class Particle {
 			}
 			return collisions;
 		}
-		return { update, draw };
+		return { update, draw, processPolygons };
 	}
 }
